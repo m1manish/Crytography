@@ -1,0 +1,59 @@
+# Function to encrypt the text using Vigenère Cipher
+def vigenere_encrypt(plaintext, keyword):
+    result = []
+    keyword_repeated = (keyword * (len(plaintext) // len(keyword))) + keyword[:len(plaintext) % len(keyword)]
+    
+    for p, k in zip(plaintext, keyword_repeated):
+        if p.isalpha():
+            # Shift within the alphabet
+            shift = ord(k.upper()) - ord('A')
+            if p.islower():
+                encrypted_char = chr((ord(p) - ord('a') + shift) % 26 + ord('a'))
+            else:
+                encrypted_char = chr((ord(p) - ord('A') + shift) % 26 + ord('A'))
+            result.append(encrypted_char)
+        else:
+            # If character is not a letter, add it as is
+            result.append(p)
+    
+    return ''.join(result)
+
+# Function to decrypt the text using Vigenère Cipher
+def vigenere_decrypt(ciphertext, keyword):
+    result = []
+    keyword_repeated = (keyword * (len(ciphertext) // len(keyword))) + keyword[:len(ciphertext) % len(keyword)]
+    
+    for c, k in zip(ciphertext, keyword_repeated):
+        if c.isalpha():
+            # Shift within the alphabet in the reverse direction
+            shift = ord(k.upper()) - ord('A')
+            if c.islower():
+                decrypted_char = chr((ord(c) - ord('a') - shift) % 26 + ord('a'))
+            else:
+                decrypted_char = chr((ord(c) - ord('A') - shift) % 26 + ord('A'))
+            result.append(decrypted_char)
+        else:
+            # If character is not a letter, add it as is
+            result.append(c)
+    
+    return ''.join(result)
+
+# Example usage:
+plaintext = "Hello, World!"
+keyword = "KEY"
+
+# Encrypting the text
+encrypted_text = vigenere_encrypt(plaintext, keyword)
+print("Encrypted:", encrypted_text)
+
+# Decrypting the text
+decrypted_text = vigenere_decrypt(encrypted_text, keyword)
+print("Decrypted:", decrypted_text)
+
+
+
+
+OUTPUT:
+
+Encrypted: Rijvs, Uyvjn!
+Decrypted: Hello, World!
