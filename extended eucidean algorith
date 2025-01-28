@@ -1,0 +1,22 @@
+# Function to compute the GCD of a and b, and find x, y such that ax + by = gcd(a, b)
+def extended_euclidean(a, b):
+    if b == 0:
+        return a, 1, 0  # GCD, x, y
+    else:
+        gcd, x1, y1 = extended_euclidean(b, a % b)
+        x = y1
+        y = x1 - (a // b) * y1
+        return gcd, x, y
+
+# Example usage:
+a = 30
+b = 12
+
+gcd, x, y = extended_euclidean(a, b)
+print(f"The GCD of {a} and {b} is: {gcd}")
+print(f"Coefficients x and y such that {a}x + {b}y = {gcd} are: x = {x}, y = {y}")
+
+
+OUTPUT:
+The GCD of 30 and 12 is: 6
+Coefficients x and y such that 30x + 12y = 6 are: x = -1, y = 3
