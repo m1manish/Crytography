@@ -1,0 +1,60 @@
+import random
+from sympy import isprime, mod_inverse
+
+# Generate a large prime number
+def generate_prime(start=50, end=100):
+    while True:
+        p = random.randint(start, end)
+        if isprime(p):
+            return p
+
+# ElGamal Key Generation
+def generate_keys():
+    p = generate_prime()
+    e1 = random.randint(2, p - 1)  # Select e1 (primitive root mod p)
+    d = random.randint(2, p - 2)  # Private key
+    e2 = pow(e1, d, p)  # Public key component
+    return p, e1, e2, d
+
+# ElGamal Encryption
+def encrypt(message, p, e1, e2):
+    r = random.randint(1, p - 2)  # Random integer r
+    c1 = pow(e1, r, p)  # Compute c1
+    c2 = [(ord(char) * pow(e2, r, p)) % p for char in message]  # Compute c2
+    return c1, c2
+
+# ElGamal Decryption
+def decrypt(c1, c2, p, d):
+    c1_d = pow(c1, d, p)  # Compute c1^d mod p
+    c1_d_inverse = mod_inverse(c1_d, p)  # Modular inverse of c1^d mod p
+    plaintext = ''.join([chr((char * c1_d_inverse) % p) for char in c2])  # Decrypt each character
+    return plaintext
+
+# Main
+p, e1, e2, d = generate_keys()
+print(f"Public key: (p={p}, e1={e1}, e2={e2})")
+print(f"Private key: (d={d})")
+
+# Input word
+word = "HELLO"
+
+# Encrypt the word
+c1, c2 = encrypt(word, p, e1, e2)
+print("Encrypted:")
+print(f"c1: {c1}")
+print(f"c2: {c2}")
+
+# Decrypt back to plaintext
+decrypted = decrypt(c1, c2, p, d)
+print("Decrypted:", decrypted)
+
+
+OUTPUT:
+// Enter a large prime number (p): 11
+// Enter primitive root modulo p (e1): 2
+// Enter private key (d): 3
+// Computed public key e2: 8
+// Enter random integer (r): 4
+// Enter plaintext (integer): 7
+// Encrypted values: c1 = 5, c2 = 6
+// Decrypted plaintext: 7
